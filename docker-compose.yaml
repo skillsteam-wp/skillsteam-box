@@ -1,0 +1,58 @@
+services:
+  front:
+    depends_on:
+      postgres:
+        condition: service_healthy
+    image: cr.selcloud.ru/skillsteam/skillsteam-box:01
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+  sync:
+    image: cr.selcloud.ru/skillsteam/skillsteam-box:01
+    entrypoint: ["npm", "run", "synchronization:run"]
+    env_file:
+      - .env
+  postgres:
+    image: cr.selcloud.ru/skillsteam/postgres:16
+    healthcheck:
+      interval: 10s
+      retries: 10
+      test: "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""
+      timeout: 2s
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_DB: $POSTGRES_DB
+      POSTGRES_HOST: $POSTGRES_HOST
+      POSTGRES_PORT: $POSTGRES_PORT
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    volumes:
+      - postgres:/var/lib/postgresql
+  redis:
+    image: redis:alpine3.20
+    volumes:
+      - redis:/data
+      - .docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+  s3:
+    profiles: ["s3"]
+    image: cr.selcloud.ru/skillsteam/garage:v1.0.0
+    environment:
+      RUST_LOG: 'garage=error'
+    ports:
+      - "127.0.0.1:3902:3902"
+      - "127.0.0.1:3900:3900"
+    volumes:
+      - .docker/garage/garage.toml:/etc/garage.toml
+      - garage-data:/tmp/data
+      - garage-meta:/tmp/meta
+  postfix:
+    image: cr.selcloud.ru/skillsteam/postfix:0.4
+    environment:
+      TX_SMTP_RELAY_MYHOSTNAME: $SMTP_HOSTNAME
+      TX_SMTP_RELAY_NETWORKS: '0.0.0.0/0'
+    entrypoint: ['sh', '-c', 'postconf "local_recipient_maps = " && postconf "smtp_generic_maps = hash:/etc/postfix/generic" && echo "$SMTP_MAILBOX@skillsteam.pro  $SMTP_MAILBOX@$SMTP_HOSTNAME" >> /etc/postfix/generic && postmap /etc/postfix/generic && /entrypoint.sh']
+volumes:
+  redis:
+  postgres:
+  garage-data:
+  garage-meta:

@@ -3,7 +3,9 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    image: cr.selcloud.ru/skillsteam/skillsteam-box:01
+    image: cr.selcloud.ru/skillsteam/skillsteam-box:$VERSION
+    environment:
+      SMTP_FROM: $SMTP_MAILBOX@$SMTP_HOSTNAME
     ports:
       - "3000:3000"
     env_file:

@@ -11,7 +11,9 @@ services:
     env_file:
       - .env
   sync:
-    image: cr.selcloud.ru/skillsteam/skillsteam-box:01
+    image: cr.selcloud.ru/skillsteam/skillsteam-box:$VERSION
+    environment:
+      SMTP_FROM: $SMTP_MAILBOX@$SMTP_HOSTNAME
     entrypoint: ["npm", "run", "synchronization:run"]
     env_file:
       - .env

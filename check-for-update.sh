@@ -35,10 +35,10 @@ function pull() {
 function up() {
   if docker compose version
   then
-    docker compose up -d front
+    docker compose up -d front sync
   elif docker-compose version
   then
-    docker-compose up -d front
+    docker-compose up -d front sync
   else
     echo -e "${Red}Please install docker compose plugin${Color_Off}"
   fi
@@ -47,8 +47,8 @@ function up() {
 function down() {
   if docker compose version
   then
-    docker compose down front
-  elif docker-compose version
+    docker compose down front sync
+  elif docker-compose version sync
   then
     docker-compose down front
   else

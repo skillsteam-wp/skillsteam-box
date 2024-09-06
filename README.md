@@ -50,7 +50,7 @@ make prepare
 К примеру если нужно развернуть приложение по адресу app.skillsteam.pro нужно задать такие значения для переменных:
 
 `NEXTAUTH_URL=https://app.skillsteam.pro`  
-`NEXT_PUBLIC_FRONT_URL=https://app.skillsteam.pro`
+`FRONT_URL=https://app.skillsteam.pro`
 
 Для работы приложения нужно обязательно указать лицензионный ключ в переменной `LICENSE_KEY`  
 
@@ -95,7 +95,7 @@ make prepare
 ### MX
 - Тип: `MX`
 - Название записи: `skillsteam.pro.` (точка в конце обязательна)
-- Значение: `skillsteam.pro` (без точки в конце)
+- Значение: `skillsteam.pro.`
 
 
 ## Приложение можно запустить в двух вариантах:  

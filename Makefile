@@ -12,3 +12,10 @@ down:
 
 down-s3:
 	./launch.sh down-s3
+
+
+backup_db:
+	./backup.sh backup
+
+restore_db:
+	./backup.sh restore

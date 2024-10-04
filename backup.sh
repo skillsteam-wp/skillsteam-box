@@ -16,13 +16,13 @@ fi
 
 function backup() {
     $DOCKER_COMPOSE exec postgres bash -c 'pg_dump -Fc -U$POSTGRES_USER $POSTGRES_DB > /skillsteam.backup'
-    container_name=$(docker-compose ps | grep postgres | awk '{print $1}')
+    container_name=$($DOCKER_COMPOSE ps | grep postgres | awk '{print $1}')
     docker cp $container_name:/skillsteam.backup ./skillsteam.backup
 }
 
 function restore() {
     if [ -f "skillsteam.backup" ]; then
-        container_name=$(docker-compose ps | grep postgres | awk '{print $1}')
+        container_name=$($DOCKER_COMPOSE ps | grep postgres | awk '{print $1}')
         docker cp ./skillsteam.backup $container_name:/skillsteam.backup
         $DOCKER_COMPOSE exec postgres bash -c 'pg_restore -U$POSTGRES_USER -c -d $POSTGRES_DB -x /skillsteam.backup'
     else

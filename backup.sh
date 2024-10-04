@@ -24,7 +24,7 @@ function restore() {
     if [ -f "skillsteam.backup" ]; then
         container_name=$($DOCKER_COMPOSE ps | grep postgres | awk '{print $1}')
         docker cp ./skillsteam.backup $container_name:/skillsteam.backup
-        $DOCKER_COMPOSE exec postgres bash -c 'pg_restore -U$POSTGRES_USER -c -d $POSTGRES_DB -x /skillsteam.backup'
+        $DOCKER_COMPOSE exec postgres bash -c 'pg_restore -U$POSTGRES_USER -d $POSTGRES_DB -x /skillsteam.backup'
     else
         echo "Файл для восстановления базы данных (skillsteam.backup) не найден."
         exit 2
